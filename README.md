@@ -1,6 +1,6 @@
-# AI Research Assistant 🚀
+# AI-Assistant 🚀
 
-An AI-powered Research Assistant built using FastAPI, FAISS, Sentence Transformers, and LLM APIs.
+An AI-powered Assistant built using FastAPI, FAISS, Sentence Transformers, Groq LLM APIs, and Streamlit.
 
 This project allows users to:
 
@@ -9,11 +9,13 @@ This project allows users to:
 - Perform semantic search
 - Ask questions from uploaded documents
 - Generate AI-powered summaries
+- Generate interactive quizzes
+- Evaluate quiz scores
 - Use Retrieval-Augmented Generation (RAG)
 
 ---
 
-# Features ✨
+# Features 
 
 ## ✅ PDF Upload
 Upload PDF documents through FastAPI endpoints.
@@ -36,6 +38,16 @@ Users can ask questions related to uploaded documents.
 ## ✅ AI Summarization
 Generates concise summaries using LLM APIs.
 
+## ✅ Interactive Quiz System
+Automatically generates MCQs from uploaded documents.
+
+### Quiz Features
+- Multiple-choice questions
+- Interactive radio buttons
+- Score calculation
+- Correct answer display
+- Quiz evaluation
+
 ## ✅ Retrieval-Augmented Generation (RAG)
 Combines vector retrieval + LLM generation for accurate contextual answers.
 
@@ -46,10 +58,13 @@ Combines vector retrieval + LLM generation for accurate contextual answers.
 ## Backend
 - FastAPI
 
+## Frontend
+- Streamlit
+
 ## AI / ML
 - Sentence Transformers
 - FAISS
-- LLM APIs (Groq/OpenAI Compatible)
+- Groq API (LLM)
 
 ## PDF Processing
 - PyMuPDF (`fitz`)
@@ -77,11 +92,69 @@ Semantic Retrieval
 LLM Generation
 ↓
 Final AI Response
+```
 
+---
 
-# How to Run the Project ▶️
+# API Endpoints 📌
 
-## 1. Clone the Repository
+## `GET /`
+Health check endpoint.
+
+---
+
+## `POST /upload`
+Upload PDF documents.
+
+### Features
+- Saves uploaded PDF
+- Extracts text
+- Creates chunks
+- Generates embeddings
+- Stores vectors in FAISS
+
+---
+
+## `GET /ask`
+Ask questions from uploaded documents.
+
+### Example
+```text
+What backend technologies does Hamsha know?
+```
+
+### Response
+AI-generated contextual answer from uploaded PDF.
+
+---
+
+## `GET /summary`
+Generate summary of uploaded document.
+
+### Response
+AI-generated summarized version of document.
+
+---
+
+## `GET /quiz`
+Generate interactive MCQs from uploaded document.
+
+# Streamlit Frontend 
+
+The project also includes an interactive Streamlit frontend.
+
+## Frontend Features
+- Upload PDFs
+- Ask AI questions
+- Generate summaries
+- Interactive quiz UI
+- Score calculation
+
+---
+
+# Installation ⚙️
+
+## 1. Clone Repository
 
 ```bash
 git clone <https://github.com/Achu-24/AI-Assistant.git>
@@ -113,31 +186,21 @@ source venv/bin/activate
 ## 3. Install Dependencies
 
 ```bash
-pip install fastapi uvicorn python-multipart pymupdf sentence-transformers faiss-cpu numpy openai python-dotenv
+pip install fastapi uvicorn python-multipart pymupdf sentence-transformers faiss-cpu numpy openai python-dotenv streamlit requests
 ```
 
 ---
 
-## 4. Create `.env` File
+# API Key Setup 🔑
 
-Create a file named:
+Add your Groq API key directly inside `main.py`.
 
-```text
-.env
-```
-
-Add your Groq API key:
-
-```env
-GROQ_API_KEY=your_api_key_here
-```
-
-Get API Key from:
+Get API key from:
 https://console.groq.com/
 
 ---
 
-## 5. Run FastAPI Server
+# Run Backend ▶️
 
 ```bash
 uvicorn main:app --reload
@@ -145,37 +208,63 @@ uvicorn main:app --reload
 
 ---
 
-## 6. Open Swagger Docs
+# Run Frontend ▶️
 
-Visit:
+Open a new terminal:
 
-```text
-http://127.0.0.1:8000/docs
+```bash
+streamlit run app.py
 ```
 
 ---
 
-## 7. Use the APIs
+# Open Applications 🌐
 
-### Upload PDF
-Use:
+## FastAPI Docs
 ```text
-POST /upload
+http://127.0.0.1:8000/docs
 ```
 
-### Ask Questions
-Use:
+## Streamlit Frontend
 ```text
-GET /ask
+http://localhost:8501
 ```
 
-Example:
-```text
-What are Hamsha's technical skills?
-```
+---
 
-### Generate Summary
-Use:
-```text
-GET /summary
-```
+# Example Workflow 🧪
+
+## Step 1 — Upload PDF
+Upload a PDF document.
+
+## Step 2 — Ask Questions
+Ask contextual questions from uploaded document.
+
+## Step 3 — Generate Summary
+Generate AI summary of document.
+
+## Step 4 — Generate Quiz
+Generate MCQs automatically.
+
+## Step 5 — Submit Quiz
+Select answers and calculate score.
+
+---
+
+# Learning Outcomes 📚
+
+This project helped in understanding:
+
+- FastAPI
+- Streamlit
+- APIs
+- Retrieval-Augmented Generation (RAG)
+- Embeddings
+- Vector Databases
+- Semantic Search
+- FAISS
+- Prompt Engineering
+- LLM Integration
+- AI System Architecture
+
+---
