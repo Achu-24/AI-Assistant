@@ -1,9 +1,6 @@
 from fastapi import FastAPI, UploadFile, File
 import shutil
 import fitz
-from sentence_transformers import SentenceTransformer
-import faiss
-import numpy as np
 from openai import OpenAI
 
 # Groq Client
@@ -17,20 +14,15 @@ app = FastAPI()
 
 # Global storage
 chunks_store = []
-index = None
 
 @app.get("/")
 def home():
-    return {"message": "AI Research Assistant Running"}
+    return {"message": "AI-Assistant Running"}
 
 @app.post("/upload")
 async def upload_pdf(file: UploadFile = File(...)):
 
     global chunks_store
-    global index
-
-    # Lazy load embedding model
-    model = SentenceTransformer('all-MiniLM-L6-v2')
 
     # Save uploaded PDF
     with open(file.filename, "wb") as buffer:
@@ -54,46 +46,18 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     chunks_store = chunks
 
-    # Create embeddings
-    embeddings = model.encode(chunks)
-
-    embeddings = np.array(embeddings)
-
-    # Create FAISS index
-    dimension = embeddings.shape[1]
-
-    index = faiss.IndexFlatL2(dimension)
-
-    # Store embeddings
-    index.add(embeddings)
-
     return {
         "message": f"{file.filename} uploaded successfully",
-        "total_chunks": len(chunks),
-        "faiss_vectors_stored": index.ntotal
+        "total_chunks": len(chunks)
     }
 
 @app.get("/ask")
 async def ask_question(question: str):
 
     global chunks_store
-    global index
 
-    # Load embedding model
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-
-    # Convert question into embedding
-    question_embedding = model.encode([question])
-
-    question_embedding = np.array(question_embedding)
-
-    # Search FAISS
-    distances, indices = index.search(question_embedding, k=3)
-
-    # Retrieve chunks
-    retrieved_chunks = [chunks_store[i] for i in indices[0]]
-
-    retrieved_chunk = " ".join(retrieved_chunks)
+    # Simple retrieval
+    retrieved_chunk = " ".join(chunks_store[:3])
 
     # Prompt
     prompt = f"""
@@ -134,7 +98,7 @@ async def summarize_document():
 
     global chunks_store
 
-    # Combine all chunks
+    # Combine chunks
     document_text = " ".join(chunks_store)
 
     # Prompt
@@ -172,7 +136,7 @@ async def generate_quiz():
 
     global chunks_store
 
-    # Combine all chunks
+    # Combine chunks
     document_text = " ".join(chunks_store)
 
     # Prompt

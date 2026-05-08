@@ -2,14 +2,8 @@ fastapi
 uvicorn
 python-multipart
 pymupdf
-sentence-transformers
-faiss-cpu
 numpy
 openai
-python-dotenv
 streamlit
 requests
-torch
-scikit-learn
-scipy
-transformers
+python-dotenv
