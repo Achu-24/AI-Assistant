@@ -85,10 +85,12 @@ async def ask_question(question: str):
     question_embedding = np.array(question_embedding)
 
     # Search FAISS
-    distances, indices = index.search(question_embedding, k=1)
+    distances, indices = index.search(question_embedding, k=3)
 
     # Retrieve best chunk
-    retrieved_chunk = chunks_store[indices[0][0]]
+    retrieved_chunks = [chunks_store[i] for i in indices[0]]
+
+    retrieved_chunk = " ".join(retrieved_chunks)
 
     # Prompt
     prompt = f"""
@@ -155,6 +157,56 @@ Document:
 
         return {
             "summary": summary
+        }
+
+    except Exception as e:
+        return {
+            "error": str(e)
+        }
+    
+@app.get("/quiz")
+async def generate_quiz():
+
+    global chunks_store
+
+    # Combine all chunks
+    document_text = " ".join(chunks_store)
+
+    # Prompt
+    prompt = f"""
+Generate 5 multiple choice questions from the document.
+
+Return ONLY valid JSON array format.
+
+Example format:
+
+[
+  {{
+    "question": "What is Python?",
+    "options": ["Language", "Database", "Browser", "OS"],
+    "answer": "Language"
+  }}
+]
+
+Document:
+{document_text}
+"""
+
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt
+                }
+            ]
+        )
+
+        quiz = response.choices[0].message.content
+
+        return {
+            "quiz": quiz
         }
 
     except Exception as e:
