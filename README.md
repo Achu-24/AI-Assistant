@@ -269,7 +269,7 @@ This project helped in understanding:
 
 ---
 # Backend deployment link:
-https://ai-assistant-project-g9vp.onrender.com
+https://ai-assistant-2-qgue.onrender.com
 
 # Frontend deployment link:
 https://ai-assistantgit-eutekm8p38rqgbdrocnyry.streamlit.app/

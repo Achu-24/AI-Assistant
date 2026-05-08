@@ -21,7 +21,7 @@ uploaded_file = st.file_uploader(
 if uploaded_file is not None:
 
     response = requests.post(
-        "http://127.0.0.1:8000/upload",
+        "https://ai-assistant-2-qgue.onrender.com/upload",
         files={
             "file": (
                 uploaded_file.name,
@@ -48,7 +48,7 @@ question = st.text_input(
 if st.button("Ask AI"):
 
     response = requests.get(
-        "http://127.0.0.1:8000/ask",
+        "https://ai-assistant-2-qgue.onrender.com/ask",
         params={
             "question": question
         }
@@ -69,7 +69,7 @@ st.header("Document Summary")
 if st.button("Generate Summary"):
 
     response = requests.get(
-        "http://127.0.0.1:8000/summary"
+        "https://ai-assistant-2-qgue.onrender.com/summary"
     )
 
     data = response.json()
@@ -90,7 +90,7 @@ if "quiz_data" not in st.session_state:
 if st.button("Generate Quiz"):
 
     response = requests.get(
-        "http://127.0.0.1:8000/quiz"
+        "https://ai-assistant-2-qgue.onrender.com/quiz"
     )
 
     data = response.json()
