@@ -57,7 +57,7 @@ async def ask_question(question: str):
     global chunks_store
 
     # Simple retrieval
-    retrieved_chunk = " ".join(chunks_store[:3])
+    retrieved_chunk = " ".join(chunks_store)
 
     # Prompt
     prompt = f"""

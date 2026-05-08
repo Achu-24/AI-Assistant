@@ -21,7 +21,7 @@ uploaded_file = st.file_uploader(
 if uploaded_file is not None:
 
     response = requests.post(
-        "https://ai-assistant-project-g9vp.onrender.com/upload",
+        "http://127.0.0.1:8000/upload",
         files={
             "file": (
                 uploaded_file.name,
@@ -31,7 +31,12 @@ if uploaded_file is not None:
         }
     )
 
-    st.success("PDF Uploaded Successfully ✅")
+    data = response.json()
+
+    if "message" in data:
+        st.success("PDF Uploaded Successfully ✅")
+    else:
+        st.error(data["error"])
 
 # Ask Questions
 st.header("Ask Questions")
@@ -43,7 +48,7 @@ question = st.text_input(
 if st.button("Ask AI"):
 
     response = requests.get(
-        "https://ai-assistant-project-g9vp.onrender.com/ask",
+        "http://127.0.0.1:8000/ask",
         params={
             "question": question
         }
@@ -53,7 +58,10 @@ if st.button("Ask AI"):
 
     st.subheader("AI Answer")
 
-    st.success(data["answer"])
+    if "answer" in data:
+        st.success(data["answer"])
+    else:
+        st.error(data["error"])
 
 # Generate Summary
 st.header("Document Summary")
@@ -61,14 +69,17 @@ st.header("Document Summary")
 if st.button("Generate Summary"):
 
     response = requests.get(
-        "https://ai-assistant-project-g9vp.onrender.com/summary"
+        "http://127.0.0.1:8000/summary"
     )
 
     data = response.json()
 
     st.subheader("Summary")
 
-    st.info(data["summary"])
+    if "summary" in data:
+        st.info(data["summary"])
+    else:
+        st.error(data["error"])
 
 # Interactive Quiz
 st.header("Interactive Quiz")
@@ -76,16 +87,18 @@ st.header("Interactive Quiz")
 if "quiz_data" not in st.session_state:
     st.session_state.quiz_data = None
 
-
 if st.button("Generate Quiz"):
 
     response = requests.get(
-        "https://ai-assistant-project-g9vp.onrender.com/quiz"
+        "http://127.0.0.1:8000/quiz"
     )
 
     data = response.json()
 
-    st.session_state.quiz_data = json.loads(data["quiz"])
+    if "quiz" in data:
+        st.session_state.quiz_data = json.loads(data["quiz"])
+    else:
+        st.error(data["error"])
 
 if st.session_state.quiz_data is not None:
 
@@ -115,7 +128,6 @@ if st.session_state.quiz_data is not None:
             if answer is None:
                 unanswered.append(i + 1)
 
-        
         if unanswered:
 
             st.warning(
@@ -132,7 +144,8 @@ if st.session_state.quiz_data is not None:
             st.success(
                 f"Your Score: {score}/{len(st.session_state.quiz_data)}"
             )
-            if score>=4:
+
+            if score >= 4:
                 st.balloons()
 
             st.subheader("Correct Answers")
