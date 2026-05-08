@@ -268,3 +268,7 @@ This project helped in understanding:
 - AI System Architecture
 
 ---
+# Backend deployment link:
+https://ai-assistant-project-g9vp.onrender.com
+
+# Frontend deployment link:
