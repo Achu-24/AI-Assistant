@@ -1,11 +1,13 @@
 from fastapi import FastAPI, UploadFile, File
 import shutil
 import fitz
+import os
 from openai import OpenAI
 
-# Groq Client
+
+
 client = OpenAI(
-    api_key="GROQ_API_KEY",
+    api_key=os.getenv("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
 )
 
