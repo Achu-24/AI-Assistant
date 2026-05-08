@@ -15,9 +15,6 @@ client = OpenAI(
 # FastAPI app
 app = FastAPI()
 
-# Embedding model
-model = SentenceTransformer('all-MiniLM-L6-v2')
-
 # Global storage
 chunks_store = []
 index = None
@@ -31,6 +28,9 @@ async def upload_pdf(file: UploadFile = File(...)):
 
     global chunks_store
     global index
+
+    # Lazy load embedding model
+    model = SentenceTransformer('all-MiniLM-L6-v2')
 
     # Save uploaded PDF
     with open(file.filename, "wb") as buffer:
@@ -79,6 +79,9 @@ async def ask_question(question: str):
     global chunks_store
     global index
 
+    # Load embedding model
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+
     # Convert question into embedding
     question_embedding = model.encode([question])
 
@@ -87,7 +90,7 @@ async def ask_question(question: str):
     # Search FAISS
     distances, indices = index.search(question_embedding, k=3)
 
-    # Retrieve best chunk
+    # Retrieve chunks
     retrieved_chunks = [chunks_store[i] for i in indices[0]]
 
     retrieved_chunk = " ".join(retrieved_chunks)
@@ -163,7 +166,7 @@ Document:
         return {
             "error": str(e)
         }
-    
+
 @app.get("/quiz")
 async def generate_quiz():
 
